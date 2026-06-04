@@ -1,0 +1,54 @@
+name: Update jellyfin-desktop
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 0"   # 03:00 UTC every Sunday
+
+concurrency:
+  group: update-jellyfin-desktop
+  cancel-in-progress: true
+
+permissions:
+  contents: write 
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Bump the input
+        run: nix flake update jellyfin-desktop-src
+
+      - name: Did the lock change?
+        id: lock
+        run: |
+          if git diff --quiet -- flake.lock; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "flake.lock unchanged"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump nixpkgs too
+        if: steps.lock.outputs.changed == 'true'
+        run: nix flake update nixpkgs
+
+      - name: Build it
+        if: steps.lock.outputs.changed == 'true'
+        run: nix build .#jellyfin-desktop --print-build-logs
+
+      - name: Commit & push
+        if: success() && steps.lock.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flake.lock
+          git commit -m "flake.lock: update jellyfin-desktop-src"
+          git push
