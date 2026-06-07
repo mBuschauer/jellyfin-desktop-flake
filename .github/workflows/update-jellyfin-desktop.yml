@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 3 * * 0"   # 03:00 UTC every Sunday
+  push:
+    paths:
+      - flake.nix
+      - flake.lock
 
 concurrency:
   group: update-jellyfin-desktop
