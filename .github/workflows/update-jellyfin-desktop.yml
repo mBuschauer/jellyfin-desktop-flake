@@ -3,7 +3,7 @@ name: Update jellyfin-desktop
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 3 * * 0"   # 03:00 UTC every Sunday
+    - cron: "0 3 * * 0,2,4"   # 03:00 UTC on Sunday, Tuesday, Thursday
   push:
     paths:
       - flake.nix

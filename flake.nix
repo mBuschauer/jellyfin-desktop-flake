@@ -29,7 +29,7 @@
       cargoLock = {
         lockFile = "${jellyfin-desktop-src}/src/Cargo.lock";
         outputHashes = {
-          "wl-proxy-0.1.2" = "sha256-zssZ6kJTw7GrwXJBdvxc+HWdIKaqb/SfUqT/VTaI4pI=";
+          "wl-proxy-0.1.2" = "sha256-8NMNPhBSW2gLXc9bwyg2kmHb12XIaV6b4PjM62xLldQ=";
         };
       };
 
@@ -80,6 +80,15 @@
         pname = "jellyfin-desktop-mpv";
         src = jellyfin-desktop-src;
         sourceRoot = "source/third_party/mpv";
+        postPatch =
+          # Make upstream's now-stale substitution non-fatal instead of erroring.
+          builtins.replaceStrings [ "--replace-fail" ] [ "--replace-quiet" ] (old.postPatch or "")
+          # Re-apply the reproducibility strip against the actual vendored line.
+          + ''
+            substituteInPlace meson.build \
+              --replace-fail "meson.build_options()" "'''"
+          '';
+
         mesonFlags = (old.mesonFlags or [ ]) ++ [
           "-Dlibmpv=true"
           "-Dalsa=disabled"
