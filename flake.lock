@@ -3,11 +3,11 @@
     "jellyfin-desktop-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1782153534,
-        "narHash": "sha256-Qdkteaia96kPsOwDO729j7f2JyidflivMkkCndE+8l8=",
+        "lastModified": 1782343804,
+        "narHash": "sha256-R4ThEYgEgoWLu7WDi6qh87e+uO4VDcNYv3rNDyGZLOw=",
         "ref": "refs/heads/main",
-        "rev": "04fae1c9530683cd917478370c6a584d863c5257",
-        "revCount": 1024,
+        "rev": "1d9a52931cc5304acc31c0dc129733cbc6290e88",
+        "revCount": 1026,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/jellyfin/jellyfin-desktop.git"
