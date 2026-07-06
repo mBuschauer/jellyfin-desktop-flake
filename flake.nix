@@ -72,7 +72,7 @@
 
         outputHashMode = "recursive";
         outputHashAlgo = "sha256";
-        outputHash = "sha256-J/i82yHDyEek28PjVohNk2aChurin/svM5cPb/dzvaM=";
+        outputHash = "sha256-Yjp4rWtfbo1hm6y9uqmhYmqUrlSoHR38z6X/Y6pYFWc=";
       };
 
       # mpv built from the vendored sources in `third_party/mpv`, exposing libmpv.
