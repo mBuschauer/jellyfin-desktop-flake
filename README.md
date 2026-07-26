@@ -1,5 +1,5 @@
 # jellyfin-desktop-flake
-A flake for the new [jellyfin-desktop](https://github.com/jellyfin/jellyfin-desktop)
+A flake for the new [jellium-desktop](https://github.com/andrewrabert/jellium-desktop)
 
 The flake.lock gets checked for updates once a week on Sundays or whenever I remember. 
 
@@ -12,7 +12,7 @@ Install jellyfin-desktop with
 { inputs, ... }:
 {
     environment.systemPackages = [
-        inputs.jellyfin-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.jellium-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 }
 ```
