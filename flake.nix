@@ -3,8 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    jellyfin-desktop-src = {
-      url = "git+https://github.com/jellyfin/jellyfin-desktop.git?submodules=1";
+    jellium-desktop-src = {
+      url = "git+https://github.com/andrewrabert/jellium-desktop.git?submodules=1";
       flake = false;
     };
   };
@@ -13,7 +13,7 @@
     {
       self,
       nixpkgs,
-      jellyfin-desktop-src,
+      jellium-desktop-src,
     }:
     let
       system = "x86_64-linux";
@@ -21,15 +21,15 @@
       lib = pkgs.lib;
 
       # App version comes straight from the Cargo workspace manifest.
-      cargoToml = fromTOML (builtins.readFile "${jellyfin-desktop-src}/src/Cargo.toml");
+      cargoToml = fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.toml");
       appVersion = cargoToml.workspace.package.version;
 
       # Shared by the `cef` fetcher and the main package: both vendor the same
       # workspace lockfile and need the hash for the one git dependency.
       cargoLock = {
-        lockFile = "${jellyfin-desktop-src}/src/Cargo.lock";
+        lockFile = "${jellium-desktop-src}/src/Cargo.lock";
         outputHashes = {
-          "wl-proxy-0.1.2" = "sha256-8NMNPhBSW2gLXc9bwyg2kmHb12XIaV6b4PjM62xLldQ=";
+          # "wl-proxy-0.1.2" = "sha256-8NMNPhBSW2gLXc9bwyg2kmHb12XIaV6b4PjM62xLldQ=";
         };
       };
 
@@ -38,9 +38,9 @@
       # `outputHash`) so the network fetch is allowed; `cargoLock` is only here
       # so the xtask crate itself can build offline.
       cef = pkgs.rustPlatform.buildRustPackage {
-        pname = "jellyfin-desktop-cef";
+        pname = "jellium-desktop-cef";
         version = appVersion;
-        src = jellyfin-desktop-src;
+        src = jellium-desktop-src;
         sourceRoot = "source";
 
         inherit cargoLock;
@@ -72,13 +72,13 @@
 
         outputHashMode = "recursive";
         outputHashAlgo = "sha256";
-        outputHash = "sha256-J/i82yHDyEek28PjVohNk2aChurin/svM5cPb/dzvaM=";
+        outputHash = "sha256-ZjKh3lh990NWrtCnmqpELF3XjCoDmeso98XpBsTOh1U=";
       };
 
       # mpv built from the vendored sources in `third_party/mpv`, exposing libmpv.
       mpv = pkgs.mpv-unwrapped.overrideAttrs (old: {
-        pname = "jellyfin-desktop-mpv";
-        src = jellyfin-desktop-src;
+        pname = "jellium-desktop-mpv";
+        src = jellium-desktop-src;
         sourceRoot = "source/third_party/mpv";
         postPatch =
           # Make upstream's now-stale substitution non-fatal instead of erroring.
@@ -148,10 +148,10 @@
         xcbutilkeysyms
       ];
 
-      jellyfin-desktop = pkgs.rustPlatform.buildRustPackage {
-        pname = "jellyfin-desktop";
+      jellium-desktop = pkgs.rustPlatform.buildRustPackage {
+        pname = "jellium-desktop";
         version = appVersion;
-        src = jellyfin-desktop-src;
+        src = jellium-desktop-src;
         sourceRoot = "source";
 
         inherit cargoLock;
@@ -205,13 +205,14 @@
             --external-cef "$NIX_BUILD_TOP/writable-cef" \
             --external-mpv "$NIX_BUILD_TOP/writable-mpv" \
             --no-kde-palette \
-            --prefix "$out/opt/jellyfin-desktop"
+            --prefix "$out/opt/jellium-desktop"
 
-          patchelf --set-rpath "\$ORIGIN" $out/opt/jellyfin-desktop/jellyfin-desktop
+
+          patchelf --set-rpath "\$ORIGIN" $out/opt/jellium-desktop/jellium-desktop
 
           # Symlink into /bin and wrap so the GPU drivers resolve at runtime.
           mkdir -p $out/bin
-          makeWrapper $out/opt/jellyfin-desktop/jellyfin-desktop $out/bin/jellyfin-desktop \
+          makeWrapper $out/opt/jellium-desktop/jellium-desktop $out/bin/jellium-desktop \
             --prefix LD_LIBRARY_PATH : ${
               lib.makeLibraryPath [
                 pkgs.libglvnd
@@ -220,27 +221,27 @@
             }
 
           # Desktop entry and icon.
-          install -Dm644 resources/linux/org.jellyfin.JellyfinDesktop.svg \
-            $out/share/icons/hicolor/scalable/apps/org.jellyfin.JellyfinDesktop.svg
-          install -Dm644 resources/linux/org.jellyfin.JellyfinDesktop.desktop \
-            $out/share/applications/org.jellyfin.JellyfinDesktop.desktop
+          install -Dm644 resources/linux/net.nullsum.JelliumDesktop.svg \
+            $out/share/icons/hicolor/scalable/apps/net.nullsum.JelliumDesktop.svg
+          install -Dm644 resources/linux/net.nullsum.JelliumDesktop.desktop \
+            $out/share/applications/net.nullsum.JelliumDesktop.desktop
 
           runHook postInstall
         '';
 
         meta = {
-          description = "Jellyfin Desktop Client";
-          homepage = "https://github.com/jellyfin/jellyfin-desktop";
+          description = "Jellium Desktop Client";
+          homepage = "https://github.com/andrewrabert/jellium-desktop";
           license = lib.licenses.gpl2Only;
           platforms = [ "x86_64-linux" ];
-          mainProgram = "jellyfin-desktop";
+          mainProgram = "jellium-desktop";
         };
       };
     in
     {
       packages.${system} = {
-        default = jellyfin-desktop;
-        inherit jellyfin-desktop cef mpv;
+        default = jellium-desktop;
+        inherit jellium-desktop cef mpv;
       };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -266,7 +267,7 @@
 
       apps.${system}.default = {
         type = "app";
-        program = lib.getExe jellyfin-desktop;
+        program = lib.getExe jellium-desktop;
       };
     };
 }
