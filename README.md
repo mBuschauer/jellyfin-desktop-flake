@@ -1,18 +1,18 @@
 # jellyfin-desktop-flake
-A flake for the new [jellyfin-desktop](https://github.com/jellyfin/jellyfin-desktop)
+A flake for the new [jellium-desktop](https://github.com/andrewrabert/jellium-desktop)
 
-The flake.lock gets checked for updates once a week on Sundays or whenever I remember. 
+The flake.lock gets checked for updates three times a week
 
 To use, add the following as an input to `flake.nix`
 ```nix
-    jellyfin-desktop.url = "github:mBuschauer/jellyfin-desktop-flake";
+    jellium-desktop.url = "github:mBuschauer/jellyfin-desktop-flake";
 ```
 Install jellyfin-desktop with
 ```nix
 { inputs, ... }:
 {
     environment.systemPackages = [
-        inputs.jellyfin-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.jellium-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 }
 ```
