@@ -1,0 +1,46 @@
+{
+  "nodes": {
+    "jellium-desktop-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789439848,
+        "narHash": "sha256-8D1oZdFuD5P6TAD99x3uaojMjCFUbnLExjD3w73upHc=",
+        "ref": "refs/heads/main",
+        "rev": "b0a962d277c7bf71176fcf0c9e34a7d33ec1f5f7",
+        "revCount": 1149,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/andrewrabert/jellium-desktop.git"
+      },
+      "original": {
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/andrewrabert/jellium-desktop.git"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1789286504,
+        "narHash": "sha256-eiEK7cKZORNEvX0GeF3RtNEF/JXhgf2RqSp3230q13E=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ef34387ddd751e1ab8857adf4676492d32eb24ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "jellium-desktop-src": "jellium-desktop-src",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
