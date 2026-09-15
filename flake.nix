@@ -29,6 +29,8 @@
       cargoLock = {
         lockFile = "${jellium-desktop-src}/src/Cargo.lock";
         outputHashes = {
+          "cryoglyph-0.1.0" = "sha256-KJeEzzp5UCsF6Q2VlfHdjsY+N8vzTjgEZUAZtlIpfiU=";
+          "iced_core-0.15.0-dev" = "sha256-cZhPMpqeCsHfXCmqOumVaw1k3Y3r2cNzqmifmtE3UlI=";
           # "wl-proxy-0.1.2" = "sha256-8NMNPhBSW2gLXc9bwyg2kmHb12XIaV6b4PjM62xLldQ=";
         };
       };
@@ -72,7 +74,7 @@
 
         outputHashMode = "recursive";
         outputHashAlgo = "sha256";
-        outputHash = "sha256-ZjKh3lh990NWrtCnmqpELF3XjCoDmeso98XpBsTOh1U=";
+        outputHash = "sha256-IH/WFH5Egmp8lpA/2GZwmC7muUWMdMXmjoBvnhBGiZA=";
       };
 
       # mpv built from the vendored sources in `third_party/mpv`, exposing libmpv.
