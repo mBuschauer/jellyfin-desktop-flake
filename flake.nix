@@ -74,7 +74,7 @@
 
         outputHashMode = "recursive";
         outputHashAlgo = "sha256";
-        outputHash = "sha256-IH/WFH5Egmp8lpA/2GZwmC7muUWMdMXmjoBvnhBGiZA=";
+        outputHash = "sha256-lc9qYN9wfGk8BdeR+cguybMVPqtxecQ5HZsoJVNK3No=";
       };
 
       # mpv built from the vendored sources in `third_party/mpv`, exposing libmpv.
@@ -85,10 +85,9 @@
         postPatch =
           # Make upstream's now-stale substitution non-fatal instead of erroring.
           builtins.replaceStrings [ "--replace-fail" ] [ "--replace-quiet" ] (old.postPatch or "")
-          # Re-apply the reproducibility strip against the actual vendored line.
           + ''
             substituteInPlace meson.build \
-              --replace-fail "meson.build_options()" "'''"
+              --replace-quiet "meson.build_options()" "'''"
           '';
 
         mesonFlags = (old.mesonFlags or [ ]) ++ [
