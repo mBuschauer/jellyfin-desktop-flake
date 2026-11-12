@@ -5,7 +5,7 @@ The flake.lock gets checked for updates once a week on Sundays or whenever I rem
 
 To use, add the following as an input to `flake.nix`
 ```nix
-    juellium-desktop.url = "github:mBuschauer/jellyfin-desktop-flake";
+    jellium-desktop.url = "github:mBuschauer/jellyfin-desktop-flake";
 ```
 Install jellyfin-desktop with
 ```nix
