@@ -23,6 +23,10 @@
       # App version comes straight from the Cargo workspace manifest.
       cargoToml = fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.toml");
       appVersion = cargoToml.workspace.package.version;
+      cefVersion =
+        (lib.findFirst (p: p.name == "cef") (throw "cef not found in Cargo.lock")
+          (fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.lock")).package
+        ).version;
 
       # Shared by the `cef` fetcher and the main package: both vendor the same
       # workspace lockfile and need the hash for the one git dependency.
@@ -41,7 +45,7 @@
       # so the xtask crate itself can build offline.
       cef = pkgs.rustPlatform.buildRustPackage {
         pname = "jellium-desktop-cef";
-        version = appVersion;
+        version = cefVersion;
         src = jellium-desktop-src;
         sourceRoot = "source";
 
@@ -84,8 +88,7 @@
         sourceRoot = "source/third_party/mpv";
         postPatch =
           # Make upstream's now-stale substitution non-fatal instead of erroring.
-          builtins.replaceStrings [ "--replace-fail" ] [ "--replace-quiet" ] (old.postPatch or "")
-          + ''
+          builtins.replaceStrings [ "--replace-fail" ] [ "--replace-quiet" ] (old.postPatch or "") + ''
             substituteInPlace meson.build \
               --replace-quiet "meson.build_options()" "'''"
           '';
