@@ -22,7 +22,15 @@
 
       # App version comes straight from the Cargo workspace manifest.
       cargoToml = fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.toml");
-      appVersion = cargoToml.workspace.package.version;
+
+      # e.g. "20261109043837" -> "2026-11-09"
+      srcDate =
+        let
+          d = jellium-desktop-src.lastModifiedDate;
+        in
+        "${builtins.substring 0 4 d}-${builtins.substring 4 2 d}-${builtins.substring 6 2 d}";
+      appVersion = "${cargoToml.workspace.package.version}-unstable-${srcDate}";
+
       cefVersion =
         (lib.findFirst (p: p.name == "cef") (throw "cef not found in Cargo.lock")
           (fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.lock")).package
