@@ -28,7 +28,7 @@ jobs:
             experimental-features = nix-command flakes
 
       - name: Bump the input
-        run: nix flake update jellyfin-desktop-src
+        run: nix flake update jellium-desktop-src
 
       - name: Did the lock change?
         id: lock
