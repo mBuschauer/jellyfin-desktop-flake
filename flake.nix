@@ -20,7 +20,6 @@
       pkgs = nixpkgs.legacyPackages.${system};
       lib = pkgs.lib;
 
-      # App version comes straight from the Cargo workspace manifest.
       cargoToml = fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.toml");
 
       # e.g. "20261109043837" -> "2026-11-09"
@@ -36,21 +35,16 @@
           (fromTOML (builtins.readFile "${jellium-desktop-src}/src/Cargo.lock")).package
         ).version;
 
-      # Shared by the `cef` fetcher and the main package: both vendor the same
-      # workspace lockfile and need the hash for the one git dependency.
       cargoLock = {
         lockFile = "${jellium-desktop-src}/src/Cargo.lock";
         outputHashes = {
-          "cryoglyph-0.1.0" = "sha256-KJeEzzp5UCsF6Q2VlfHdjsY+N8vzTjgEZUAZtlIpfiU=";
-          "iced_core-0.15.0-dev" = "sha256-cZhPMpqeCsHfXCmqOumVaw1k3Y3r2cNzqmifmtE3UlI=";
+          "cryoglyph-0.1.0" = "sha256-KOKHPv+PZkwdMkGoR2nNixUAatUR23VYPW0hLHFQ08M=";
+          "iced_core-0.15.0-dev" = "sha256-MUV9CrQF2AhgpSxHqJS7DAhKrrW46AW5TyA6KM7KImI=";
+          "cosmic-text-0.19.0" = "sha256-93zdZ04BRwQTKqsdwYtFOaQkOsTzp2Aq4VQhNwFE8cQ=";
           # "wl-proxy-0.1.2" = "sha256-8NMNPhBSW2gLXc9bwyg2kmHb12XIaV6b4PjM62xLldQ=";
         };
       };
 
-      # Fixed-output derivation that downloads the prebuilt Chromium Embedded
-      # Framework via `cargo xtask fetch-cef`. It is an FOD (pinned by
-      # `outputHash`) so the network fetch is allowed; `cargoLock` is only here
-      # so the xtask crate itself can build offline.
       cef = pkgs.rustPlatform.buildRustPackage {
         pname = "jellium-desktop-cef";
         version = cefVersion;
@@ -89,7 +83,6 @@
         outputHash = "sha256-ZS5Lph2joAXUZEoGi+yCVqTfQjOBlklEyDcIb32Nvig=";
       };
 
-      # mpv built from the vendored sources in `third_party/mpv`, exposing libmpv.
       mpv = pkgs.mpv-unwrapped.overrideAttrs (old: {
         pname = "jellium-desktop-mpv";
         src = jellium-desktop-src;
@@ -109,7 +102,6 @@
         doInstallCheck = false;
       });
 
-      # Build-time tools.
       nativeBuildDeps = with pkgs; [
         pkg-config
         python3
@@ -118,47 +110,48 @@
         rustPlatform.bindgenHook
       ];
 
-      # Libraries linked into / loaded by the app at build and run time.
-      buildDeps = with pkgs; [
-        mpv
-        ffmpeg
+      buildDeps =
+        with pkgs;
+        [
+          ffmpeg
 
-        wayland
-        libglvnd
-        libxcb
-        libxkbcommon
-        xcbutilcursor
-        systemd
-        mesa
+          wayland
+          libglvnd
+          libxcb
+          libxkbcommon
+          xcbutilcursor
+          systemd
+          mesa
 
-        alsa-lib
-        atk
-        at-spi2-core
-        at-spi2-atk
-        cairo
-        cups
-        dbus
-        expat
-        fontconfig
-        freetype
-        gdk-pixbuf
-        glib
-        gtk3
-        nspr
-        nss
-        pango
-        libX11
-        libXcomposite
-        libXdamage
-        libXext
-        libXfixes
-        libXi
-        libXrandr
-        libXrender
-        libXtst
-        xcbutil
-        xcbutilkeysyms
-      ];
+          alsa-lib
+          atk
+          at-spi2-core
+          at-spi2-atk
+          cairo
+          cups
+          dbus
+          expat
+          fontconfig
+          freetype
+          gdk-pixbuf
+          glib
+          gtk3
+          nspr
+          nss
+          pango
+          libX11
+          libXcomposite
+          libXdamage
+          libXext
+          libXfixes
+          libXi
+          libXrandr
+          libXrender
+          libXtst
+          xcbutil
+          xcbutilkeysyms
+        ]
+        ++ [ mpv ];
 
       jellium-desktop = pkgs.rustPlatform.buildRustPackage {
         pname = "jellium-desktop";
