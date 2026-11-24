@@ -3,11 +3,11 @@
     "jellium-desktop-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1795093685,
-        "narHash": "sha256-Cg3QgA7tkwLxpaSlm2oEY7u78jd5ohTimTqF5PR3QVk=",
+        "lastModified": 1795487593,
+        "narHash": "sha256-9ZvcdsX9rhFif+BhIHhjo4KAJ+eEUrwIVNfJ84kQWYU=",
         "ref": "refs/heads/main",
-        "rev": "bd8d3efefec5655ff550a5eea33fa64897465714",
-        "revCount": 1220,
+        "rev": "194d646bb305de6ec4d47b4965679dc6da763bf5",
+        "revCount": 1221,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/andrewrabert/jellium-desktop.git"
